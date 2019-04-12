@@ -33,7 +33,7 @@ if [ ! -n "${WILDCHERRY_TIME_BG+1}" ]; then
   WILDCHERRY_TIME_BG=magenta
 fi
 if [ ! -n "${WILDCHERRY_TIME_FG+1}" ]; then
-  WILDCHERRY_TIME_FG=cyan
+  WILDCHERRY_TIME_FG=DarkTurquoise
 fi
 
 # VIRTUALENV
@@ -296,15 +296,20 @@ prompt_hg() {
 }
 
 # Dir: current working directory
+prompt_user() {
+  local emoji='👻  '
+  local context="${emoji}$(context)"
+  prompt_segment $WILDCHERRY_DIR_BG $WILDCHERRY_DIR_FG $context
+}
+
+# Dir: current working directory
 prompt_dir() {
   if [[ $WILDCHERRY_DIR_SHOW == false ]] then
     return
   fi
 
-  local dir='👸  '
-  local _context="$(context)"
-  [[ $WILDCHERRY_DIR_CONTEXT_SHOW == true && -n "$_context" ]] && dir="${dir}${_context}:"
-  [[ $WILDCHERRY_DIR_EXTENDED == true ]] && dir="${dir}%4(c:...:)%3c" || dir="${dir}%1~"
+  local dir='🚑  %~'
+  # [[ $WILDCHERRY_DIR_EXTENDED == true ]] && dir="${dir}%4(c:...:)%3c" || dir="${dir}%1~"
   prompt_segment $WILDCHERRY_DIR_BG $WILDCHERRY_DIR_FG $dir
 }
 
@@ -354,7 +359,8 @@ prompt_time() {
     return
   fi
 
-  prompt_segment $WILDCHERRY_TIME_BG $WILDCHERRY_TIME_FG '🔮  %D{%H:%M:%S} '
+  # prompt_segment $WILDCHERRY_TIME_BG $WILDCHERRY_TIME_FG '🔮  %D{%H:%M:%S} '
+  prompt_segment $WILDCHERRY_TIME_BG $WILDCHERRY_TIME_FG '🔮 [%*]'
 }
 
 # Status:
@@ -402,8 +408,8 @@ prompt_char() {
 # ------------------------------------------------------------------------------
 
 build_prompt() {
+  prompt_user
   RETVAL=$?
-  prompt_time
   prompt_status
   prompt_rvm
   prompt_virtualenv
@@ -412,6 +418,8 @@ build_prompt() {
   prompt_dir
   prompt_git
   # prompt_hg
+  # prompt_end
+  prompt_time
   prompt_end
 }
 
